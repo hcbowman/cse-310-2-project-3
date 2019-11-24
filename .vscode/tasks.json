@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "windows": {
+      "options": {
+        "shell": {
+          "executable": "bash.exe",
+          "args": ["-c"]
+        }
+      }
+    },
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "build project3 on WSL",
+            "command": "g++",
+            "args": [
+                "--std=c++11",
+                "-pedantic",
+                "-Wall",
+                "-g",
+                "/mnt/c/Users/hbowm/Documents/cse310-workspace/cse310-project3/code/main.cpp",
+                "-o",
+                "/mnt/c/Users/hbowm/Documents/cse310-workspace/cse310-project3/code/ice"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

@@ -13,3 +13,85 @@
 // }
 
 // Do something with xyz
+
+
+##############
+
+
+
+//Gets file length
+// file.ignore( std::numeric_limits<std::streamsize>::max() );
+// std::streamsize length = file.gcount();
+// file.clear();   //Since ignore will have set eof.
+// file.seekg( 0, std::ios_base::beg );
+//std::cout << "length=" << length << "\n"; //DEBUG
+
+
+#########################
+
+
+//#define DATA_SIZE sizeof(float)
+#define FILE_SIZE 15876 //In bytes
+
+void get_contents(float (&sic_array)[3969][832]) {
+
+    int year = 0; //1990 through 2005, so 0 to 15
+    int week = 1; //1 through 52
+
+
+    // 16 years times 52 weeks = 832 
+    for (unsigned int i = 0; i < 832; i++) {
+
+        float temp;
+        int total;
+        int ice;
+        int land;
+        int missing;
+
+        if (week > 52) {
+            year++;
+            week = 1;
+        }
+
+
+        std::ifstream file("CS310_project_subregion/199" + std::to_string(year) + "/Beaufort_Sea_diffw" + std::to_string(week) + "y199" + std::to_string(year) + "+landmask", std::ios::in);
+
+
+        for(unsigned int j = 0; j < FILE_SIZE; j++) {
+
+            file.read( (char*)&temp, sizeof(temp) );
+            //std::cout << "data: "<< temp << "\n"; //DEBUG
+
+            if (temp < (float)100) {
+                data.push_back(temp);
+                ice++;
+            }
+            else if (temp > (float)167 && temp < (float)169) {
+                land++;
+            }
+            else if (temp > (float)156 && temp < (float)158) {
+                missing++;
+            }
+
+
+            total++;
+        }
+
+    /*     for (auto &&i : data)
+        {
+            std::cout << "data:" << i << "\n";
+
+        } */
+
+        std::cout << "total:" << total << "\n";
+        std::cout << "ice:" << ice << "\n";
+        std::cout << "land:" << land << "\n";
+        std::cout << "missing:" << missing << "\n";
+
+
+        file.close();
+
+        week++;
+    }
+
+}

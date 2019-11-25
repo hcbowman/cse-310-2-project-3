@@ -4,74 +4,254 @@
 #include<vector>
 #include<limits>
 
-#define DATA_SIZE sizeof(float)
+#include <sstream>
+#include <iomanip>
 
-void get_contents(std::vector<float> &data) {
+#include <cmath> 
+#include <cstdlib>
 
-    float temp;
+//#define DATA_SIZE sizeof(float)
+#define FILE_SIZE 3969 //In number of floating point values
+
+std::string to_format(const int number) {
+    std::stringstream ss;
+    ss << std::setw(2) << std::setfill('0') << number;
+    return ss.str();
+}
+
+void get_contents(float (&sic_array)[3969][832], int &total, int &ice, int &land, int &missing) {
+
+    int year = 1990; //1990 through 2005, so 0 to 15
+    int week = 1; //1 through 52
+
+
+    // 16 years times 52 weeks = 832 
+    for (int t = 0; t < 832; t++) {
+
+        float temp = 0;
+        int file_pos = 0;
+
+        if (week > 52) {
+            year++;
+            week = 1;
+        }
+
+
+        std::ifstream file("CS310_project_subregion/" + std::to_string(year) + "/Beaufort_Sea_diffw" + to_format(week) + "y" + std::to_string(year) + "+landmask", std::ios::in);
+
+        for(int i = 0; i < FILE_SIZE; i++) {
+
+            if (file_pos == FILE_SIZE) {
+                break;
+            }
+
+            file.read( (char*)&temp, sizeof(temp) );
+
+            //std::cout << "data:" << temp << "\n";
+
+            if (temp < (float)100) {
+                sic_array[i][t] = temp;
+                ice++;
+            }
+            else if (temp > (float)167 && temp < (float)169) {
+                i--;
+                land++;
+            }
+            else if (temp > (float)156 && temp < (float)158) {
+                i--;
+                missing++;
+            }
+
+
+            total++;
+
+            file_pos++;
+        }
+
+        file.close();
+
+        week++;
+    }
+
+}
+
+int main() {
+
+    //Disable synchronization between the C and C++ standard streams daisea
+	std::ios::sync_with_stdio(false);
+
     int total;
     int ice;
     int land;
     int missing;
 
-    std::ifstream file("CS310_project_subregion/1990/Beaufort_Sea_diffw01y1990+landmask", std::ios::in);
-    //std::ifstream file("CS310_project_subregion/recitationExercise", std::ios::in);
+    float x_mean[3969];
+    float s_xx[3969];
+    static float sic_array[3969][832]; //[63*63][16*52] 0...62 is row 1
 
 
-    //Gets file length
-    file.ignore( std::numeric_limits<std::streamsize>::max() );
-    std::streamsize length = file.gcount();
-    file.clear();   //Since ignore will have set eof.
-    file.seekg( 0, std::ios_base::beg );
-    //std::cout << "length=" << length << "\n"; //DEBUG
-
-    for(unsigned int i = 0; i < (length/DATA_SIZE); i++) {
+    //get_contents(sic_array,total,ice,land,missing);
 
 
+    //############################################
 
-        file.read( (char*)&temp, sizeof(temp) );
-        //std::cout << "data: "<< temp << "\n"; //DEBUG
+    int year = 1990; //1990 through 2005, so 0 to 15
+    int week = 1; //1 through 52
 
-        if (temp < (float)100) {
-            data.push_back(temp);
-            ice++;
-        }
-        else if (temp > (float)167 && temp < (float)169) {
-            land++;
-        }
-        else if (temp > (float)156 && temp < (float)158) {
-            missing++;
+
+    // 16 years times 52 weeks = 832 
+    for (int t = 0; t < 832; t++) {
+
+        float temp = 0;
+        int file_pos = 0;
+
+        if (week > 52) {
+            year++;
+            week = 1;
         }
 
 
-        total++;
+        std::ifstream file("CS310_project_subregion/" + std::to_string(year) + "/Beaufort_Sea_diffw" + to_format(week) + "y" + std::to_string(year) + "+landmask", std::ios::in);
+
+        for(int i = 0; i < FILE_SIZE; i++) {
+
+            if (file_pos == FILE_SIZE) {
+                break;
+            }
+
+            file.read( (char*)&temp, sizeof(temp) );
+
+            //std::cout << "data:" << temp << "\n";
+
+            if (temp < (float)100) {
+                sic_array[i][t] = temp;
+                ice++;
+            }
+            else if (temp > (float)167 && temp < (float)169) {
+                i--;
+                land++;
+            }
+            else if (temp > (float)156 && temp < (float)158) {
+                i--;
+                missing++;
+            }
+
+
+            total++;
+
+            file_pos++;
+        }
+
+        file.close();
+
+        week++;
     }
 
-    for (auto &&i : data)
-    {
-        std::cout << "data:" << i << "\n";
+
+    //##############################################
+
+    //get means(x bar)
+    for (int i = 0; i < 3969; i++) {
+
+        float sum = 0;
+
+        for (int t = 0; t < 832; t++) {
+
+            sum += sic_array[i][t];
+        }
+
+        x_mean[i] = (sum / 832);
+        
+    }
+
+    //get s_xx
+    for (int i = 0; i < 3969; i++) {
+        float sum = 0;
+
+        for (int t = 0; t < 832; t++) {
+            float var = 0;
+            float var2 = 0;
+
+            var = (sic_array[i][t] - x_mean[i]);
+
+            var2 = (var*var);
+
+            sum += var2;
+        }
+        
+        s_xx[i] = sum;
 
     }
 
-    std::cout << "total:" << total << "\n";
-    std::cout << "ice:" << ice << "\n";
-    std::cout << "land:" << land << "\n";
-    std::cout << "missing:" << missing << "\n";
+
+    int edges_95 = 0;
+    int edges_925 = 0;
+    int edges_90 = 0;
+    int total_r_values = 0;
+
+    //get Pearson Correlation Coecient
+    for (int xx = 0; xx < 3186 ; xx++) {
 
 
-    file.close();
+        for (int yy = (xx + 1); yy < 3186 ; yy++) {
 
-}
+            float r = 0;
+            float sqrt_val = 0;
+            float var = 0;
+            float s_xy_sum = 0;
 
 
-int main() {
+            for (int t = 0; t < 832; t++) {
 
-    std::vector<float> data;
+                float var = 0;
 
+                var = (sic_array[xx][t] - x_mean[xx])*(sic_array[yy][t] - x_mean[yy]) ;
+
+                s_xy_sum += var;
+            }
+
+            sqrt_val= std::sqrt( (s_xx[xx] * s_xx[yy]) ) ;
+
+            r =  std::abs( (s_xy_sum / sqrt_val) );
+            total_r_values++;
+
+
+            if ( r > (float).95) {
+                edges_95++;
+            }
+
+            if ( r > (float).925 ) {
+                edges_925++;
+            }
+
+            if ( r > (float).90) {
+                edges_90++;
+            }
+
+        }
+
+    }
+
+
+    std::cout << "edges_95 = " << edges_95 << "\n";
+    std::cout << "edges_925 = " << edges_925 << "\n";
+    std::cout << "edges_90 = " << edges_90 << "\n";
+    std::cout << "total_r_values = " << total_r_values << "\n";
+
+    /* std::ofstream fileX1;
+
+    fileX1.open("X1.csv", std::ios::out);
+    for (int t = 0; t < 832; t++) {
+
+        for (int n = 0; n < 3969; n++) {
+            fileX1 << sic_array[n][t] << ",";
+
+        }
+        fileX1 <<"\n";
+
+    }
+    fileX1.close(); */
     
-    get_contents(data);
-
-
 
 
     return 0;

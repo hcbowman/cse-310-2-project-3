@@ -95,3 +95,68 @@ void get_contents(float (&sic_array)[3969][832]) {
     }
 
 }
+
+########################
+
+
+fatality_event node::get_fe() {
+    return fe;
+}
+void node::set_fe(fatality_event fe) {
+    this->fe = fe;
+}
+int node::get_fatality_id() {
+    return fe.fatality_id;
+}
+void node::set_fatality_id(int fatality_id) {
+    this->fe.fatality_id = fatality_id;
+}
+int node::get_event_id() {
+    return fe.event_id;
+}
+void node::set_event_id(int event_id) {
+    this->fe.event_id = event_id;
+}
+std::string node::get_fatality_type() {
+    return fe.fatality_type;
+}
+void node::set_fatality_type(std::string fatality_type) {
+    this->fe.fatality_type = fatality_type;
+}
+std::string node::get_fatality_date() {
+    return fe.fatality_date;
+}
+void node::set_fatality_date(std::string fatality_date) {
+    this->fe.fatality_date = fatality_date;
+}
+int node::get_fatality_age() {
+    return fe.fatality_age;
+}
+void node::set_fatality_age(int fatality_age) {
+    this->fe.fatality_age = fatality_age;
+}
+std::string node::get_fatality_sex() {
+    return fe.fatality_sex;
+}
+void node::set_fatality_sex(std::string fatality_sex) {
+    this->fe.fatality_sex = fatality_sex;
+}
+
+
+// fatality_event get_fe();
+    // void set_fe(fatality_event fe);
+    // int get_fatality_id();
+    // void set_fatality_id(int fatality_id);
+    // int get_event_id();
+    // void set_event_id(int event_id);
+    // std::string get_fatality_type();
+    // void set_fatality_type(std::string fatality_type);
+    // std::string get_fatality_date();
+    // void set_fatality_date(std::string fatality_date);
+    // int get_fatality_age();
+    // void set_fatality_age(int fatality_age);
+    // std::string get_fatality_sex();
+    // void set_fatality_sex(std::string fatality_sex);
+
+
+#############

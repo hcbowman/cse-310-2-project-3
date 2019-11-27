@@ -1,7 +1,4 @@
-#include<iostream>
-#include<string>
 #include<fstream>
-#include<vector>
 #include<limits>
 
 #include <sstream>
@@ -9,6 +6,8 @@
 
 #include <cmath> 
 #include <cstdlib>
+
+#include"adjacency_list.hpp"
 
 //#define DATA_SIZE sizeof(float)
 #define FILE_SIZE 3969 //In number of floating point values
@@ -23,6 +22,8 @@ void get_contents(float (&sic_array)[3969][832], int &total, int &ice, int &land
 
     int year = 1990; //1990 through 2005, so 0 to 15
     int week = 1; //1 through 52
+
+
 
 
     // 16 years times 52 weeks = 832 
@@ -85,9 +86,18 @@ int main() {
     int land;
     int missing;
 
+    int edges_95 = 0;
+    int edges_925 = 0;
+    int edges_90 = 0;
+    int total_r_values = 0;
+
     float x_mean[3969];
     float s_xx[3969];
     static float sic_array[3969][832]; //[63*63][16*52] 0...62 is row 1
+
+    adjacency_list graph95;
+    adjacency_list graph925;
+    adjacency_list graph90;
 
 
     //get_contents(sic_array,total,ice,land,missing);
@@ -183,12 +193,6 @@ int main() {
 
     }
 
-
-    int edges_95 = 0;
-    int edges_925 = 0;
-    int edges_90 = 0;
-    int total_r_values = 0;
-
     //get Pearson Correlation Coecient
     for (int xx = 0; xx < 3186 ; xx++) {
 
@@ -218,14 +222,17 @@ int main() {
 
             if ( r > (float).95) {
                 edges_95++;
+                graph95.add_edge(xx, yy);
             }
 
-            if ( r > (float).925 ) {
+            if ( r > (float).925) {
                 edges_925++;
+                graph925.add_edge(xx, yy);
             }
 
             if ( r > (float).90) {
                 edges_90++;
+                graph90.add_edge(xx, yy);
             }
 
         }
@@ -233,10 +240,16 @@ int main() {
     }
 
 
-    std::cout << "edges_95 = " << edges_95 << "\n";
-    std::cout << "edges_925 = " << edges_925 << "\n";
-    std::cout << "edges_90 = " << edges_90 << "\n";
-    std::cout << "total_r_values = " << total_r_values << "\n";
+
+
+    std::cout << "Histogram for .95" << "\n";
+    graph95.print_histogram(23);
+
+    std::cout << "Histogram for .925" << "\n";
+    graph925.print_histogram(38);
+
+    std::cout << "Histogram for .90" << "\n";
+    graph90.print_histogram(59);
 
     /* std::ofstream fileX1;
 

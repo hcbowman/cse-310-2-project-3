@@ -1,10 +1,16 @@
 CC=g++
-CPPFLAGS=--std=c++11 -pedantic -Wall -g
+CPPFLAGS=--std=c++11 -pedantic -Wall
 
-all: ice
+all: seaice
 
-ice: main.cpp
-	$(CC) $(CPPFLAGS) main.cpp -o ice
+seaice: main.cpp node.o adjacency_list.o
+	$(CC) $(CPPFLAGS) main.cpp node.o adjacency_list.o -o seaice
+
+node.o: node.cpp
+	$(CC) $(CPPFLAGS) -c node.cpp
+
+adjacency_list.o: adjacency_list.cpp
+	$(CC) $(CPPFLAGS) -c adjacency_list.cpp
 
 clean:
-	rm -f *.o *.out *.exe *.stackdump ice
+	rm -f *.o *.out *.exe *.stackdump ice seaice

@@ -251,6 +251,20 @@ int main() {
     std::cout << "Histogram for .90" << "\n";
     graph90.print_histogram(59);
 
+    std::cout << "###########" << "\n";
+
+    std::cout << "components for .95" << "\n";
+    graph95.dfs();
+    graph95.print_components();
+
+    std::cout << "components for .925" << "\n";
+    graph925.dfs();
+    graph925.print_components();
+
+    std::cout << "components for .90" << "\n";
+    graph90.dfs();
+    graph90.print_components();
+
     /* std::ofstream fileX1;
 
     fileX1.open("X1.csv", std::ios::out);

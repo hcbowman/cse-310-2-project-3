@@ -81,11 +81,13 @@ int adjacency_list::dfs_visit(node* u) {
 
 }
 
-void adjacency_list::clustering_coefficient() {
+void clustering_coefficient() {
 
-    int n;
-    int val;
 
+    int actual_edges = 0;
+    int total_posibbles_edges = 0;
+
+    int val = (2 *)/()
 
 }
 

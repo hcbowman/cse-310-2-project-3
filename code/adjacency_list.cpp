@@ -42,7 +42,7 @@ void adjacency_list::add_edge(int vertex1, int vertex2) {
 
 void adjacency_list::dfs() {
 
-    for (unsigned int i = 0; i < 500; i++) {
+    for (unsigned int i = 0; i < 3186; i++) {
         if (the_a_list[i]->get_color() == "WHITE") {
             int size = dfs_visit(the_a_list[i]);
 
@@ -61,11 +61,13 @@ int adjacency_list::dfs_visit(node* u) {
     //u->incr_discovery_time(); // set discovery time
     u->set_color("GREY");
 
-    while(u->get_next() != NULL) {
-        u = u->get_next();
+    node* temp = u;
 
-        if (u->get_color() == "WHITE") {
-            component_size += dfs_visit(u);
+    while(temp->get_next() != NULL) {
+        temp = temp->get_next();
+
+        if (temp->get_color() == "WHITE") {
+            component_size += dfs_visit(temp);
         }
 
     }
@@ -79,10 +81,18 @@ int adjacency_list::dfs_visit(node* u) {
 
 }
 
+void adjacency_list::clustering_coefficient() {
+
+    int n;
+    int val;
+
+
+}
+
 void adjacency_list::print_histogram(int size) {
 
-    std::vector<int> edge_count(size);
-    for (int i = 0; i < size; i++) {
+    std::vector<int> edge_count(500);
+    for (int i = 0; i < 500; i++) {
         edge_count.at(i) = 0;
     }
 
@@ -111,11 +121,11 @@ void adjacency_list::print_histogram(int size) {
     }
 
     //Print the histogram
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < 500; i++) {
 
         int total = edge_count.at(i);
 
-
+        if (edge_count.at(i) != 0) {
 
         std::cout << "Degree:" << i << " ";
         
@@ -123,6 +133,8 @@ void adjacency_list::print_histogram(int size) {
             std::cout << "O";
         }
         std::cout << " " << total << "\n";
+
+        }
         
 
     }

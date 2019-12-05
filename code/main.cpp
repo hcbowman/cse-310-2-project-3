@@ -223,16 +223,19 @@ int main() {
             if ( r > (float).95) {
                 edges_95++;
                 graph95.add_edge(xx, yy);
+                graph95.add_edge(yy, xx);
             }
 
             if ( r > (float).925) {
                 edges_925++;
                 graph925.add_edge(xx, yy);
+                graph925.add_edge(yy, xx);
             }
 
             if ( r > (float).90) {
                 edges_90++;
                 graph90.add_edge(xx, yy);
+                graph90.add_edge(yy, xx);
             }
 
         }
@@ -243,13 +246,13 @@ int main() {
 
 
     std::cout << "Histogram for .95" << "\n";
-    graph95.print_histogram(23);
+    graph95.print_histogram(200);
 
     std::cout << "Histogram for .925" << "\n";
-    graph925.print_histogram(38);
+    graph925.print_histogram(200);
 
     std::cout << "Histogram for .90" << "\n";
-    graph90.print_histogram(59);
+    graph90.print_histogram(200);
 
     std::cout << "###########" << "\n";
 

@@ -10,7 +10,7 @@ class adjacency_list {
     private:
 
     int number_of_components;
-    int components_list[500];
+    int components_list[3196];
 
     public:
 
@@ -21,6 +21,7 @@ class adjacency_list {
     void add_edge(int vertex1, int vertex2);
     void dfs();
     int dfs_visit(node* u);
+    void clustering_coefficient();
     void print_histogram(int size);
     void print_components();
 
